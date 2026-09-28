@@ -112,19 +112,17 @@ function alStreamMenu() {
 // MEDIUM MENU
 // ================================
 
-function mediumMenu(exam, stream = "") {
-  return [
-    `📚 *${exam} PAPERS*`,
-    stream ? `\n📂 Stream: ${stream}` : "",
-    "",
-    "Medium එක තෝරන්න:",
+function olMenu() {
+  return withFooter([
+    "📘 O/L PAST PAPERS",
     "",
     "1️⃣ Sinhala Medium",
     "2️⃣ English Medium",
-    "3️⃣ Tamil Medium",
     "",
-    "0️⃣ Back"
-  ].join("\n");
+    "Reply කරන්න: 1 හෝ 2",
+    "",
+    "🔙 menu - Main Menu"
+  ].join("\n"));
 }
 
 // ================================
@@ -132,22 +130,33 @@ function mediumMenu(exam, stream = "") {
 // ================================
 
 function olSubjectMenu() {
-  return [
-    "📘 *O/L SUBJECTS*",
+  return withFooter([
+    "📚 O/L SUBJECTS",
     "",
     "1️⃣ Mathematics",
     "2️⃣ Science",
-    "3️⃣ ICT",
-    "4️⃣ English",
-    "5️⃣ Sinhala",
+    "3️⃣ English",
+    "4️⃣ Sinhala",
+    "5️⃣ History",
     "6️⃣ Buddhism",
-    "7️⃣ History",
-    "8️⃣ Geography",
-    "9️⃣ Health",
-    "🔟 Art",
+    "7️⃣ Geography",
+    "8️⃣ Health",
+    "9️⃣ Art",
+    "🔟 Tamil",
+    "1️⃣1️⃣ Civic Education",
+    "1️⃣2️⃣ Business & Accounting Studies",
+    "1️⃣3️⃣ ICT",
+    "1️⃣4️⃣ Music",
+    "1️⃣5️⃣ Dancing",
+    "1️⃣6️⃣ Drama & Theatre",
+    "1️⃣7️⃣ French",
+    "1️⃣8️⃣ German",
+    "1️⃣9️⃣ Japanese",
     "",
-    "0️⃣ Back"
-  ].join("\n");
+    "Subject number එක reply කරන්න.",
+    "",
+    "🔙 menu - Main Menu"
+  ].join("\n"));
 }
 
 // ================================
@@ -977,17 +986,27 @@ async function handleMessage(
     state.step === "ol_subject"
   ) {
 
-    const subjects = {
-      "1": "Mathematics",
-      "2": "Science",
-      "3": "ICT",
-      "4": "English",
-      "5": "Sinhala",
-      "6": "Buddhism",
-      "7": "History",
-      "8": "Geography",
-      "9": "Health",
-      "10": "Art"
+  const olSubjects = [
+  "Mathematics",
+  "Science",
+  "English",
+  "Sinhala",
+  "History",
+  "Buddhism",
+  "Geography",
+  "Health",
+  "Art",
+  "Tamil",
+  "Civic Education",
+  "Business & Accounting Studies",
+  "ICT",
+  "Music",
+  "Dancing",
+  "Drama & Theatre",
+  "French",
+  "German",
+  "Japanese"
+];
     };
 
     if (
