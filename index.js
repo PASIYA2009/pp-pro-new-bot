@@ -9,10 +9,18 @@ const {
   fetchLatestBaileysVersion
 } = require("@whiskeysockets/baileys");
 
-const { SESSION_DIR } = require("./config");
-const { findPaperOnSite } = require("./scraper");
+const {
+  SESSION_DIR,
+  FOOTER
+} = require("./config");
 
-const logger = P({ level: "silent" });
+const {
+  findPaperOnSite
+} = require("./scraper");
+
+const logger = P({
+  level: "silent"
+});
 
 // ================================
 // USER STATES
@@ -29,6 +37,14 @@ function createState() {
     subject: "",
     year: ""
   };
+}
+
+// ================================
+// FOOTER
+// ================================
+
+function withFooter(text) {
+  return `${text}\n\n${FOOTER}`;
 }
 
 // ================================
@@ -54,7 +70,7 @@ function ask(question) {
 // ================================
 
 function mainMenu() {
-  return [
+  return withFooter([
     "📚 *PASTPAPER PRO*",
     "",
     "Paper එකක් ලබාගැනීමට option එකක් තෝරන්න:",
@@ -67,7 +83,7 @@ function mainMenu() {
     "0️⃣ Exit",
     "",
     "👉 Number එකක් reply කරන්න"
-  ].join("\n");
+  ].join("\n"));
 }
 
 // ================================
@@ -75,7 +91,7 @@ function mainMenu() {
 // ================================
 
 function olMenu() {
-  return [
+  return withFooter([
     "📘 *O/L PAPERS*",
     "",
     "Medium එක තෝරන්න:",
@@ -85,7 +101,7 @@ function olMenu() {
     "3️⃣ Tamil Medium",
     "",
     "0️⃣ Back"
-  ].join("\n");
+  ].join("\n"));
 }
 
 // ================================
@@ -93,7 +109,7 @@ function olMenu() {
 // ================================
 
 function alStreamMenu() {
-  return [
+  return withFooter([
     "📕 *A/L PAPERS*",
     "",
     "Stream එක තෝරන්න:",
@@ -105,58 +121,73 @@ function alStreamMenu() {
     "5️⃣ Mathematics",
     "",
     "0️⃣ Back"
-  ].join("\n");
+  ].join("\n"));
 }
 
 // ================================
 // MEDIUM MENU
 // ================================
 
-function olMenu() {
+function mediumMenu(exam, stream = "") {
   return withFooter([
-    "📘 O/L PAST PAPERS",
+    `📚 *${exam} ${stream ? stream.toUpperCase() : ""}*`,
+    "",
+    "Medium එක තෝරන්න:",
     "",
     "1️⃣ Sinhala Medium",
     "2️⃣ English Medium",
+    "3️⃣ Tamil Medium",
     "",
-    "Reply කරන්න: 1 හෝ 2",
-    "",
-    "🔙 menu - Main Menu"
+    "0️⃣ Back"
   ].join("\n"));
 }
+
+// ================================
+// O/L SUBJECTS
+// ================================
+
+const olSubjects = [
+  "Mathematics",
+  "Science",
+  "English",
+  "Sinhala",
+  "History",
+  "Buddhism",
+  "Geography",
+  "Health",
+  "Art",
+  "Tamil",
+  "Civic Education",
+  "Business & Accounting Studies",
+  "ICT",
+  "Music",
+  "Dancing",
+  "Drama & Theatre",
+  "French",
+  "German",
+  "Japanese"
+];
 
 // ================================
 // O/L SUBJECT MENU
 // ================================
 
 function olSubjectMenu() {
-  return withFooter([
-    "📚 O/L SUBJECTS",
+  const lines = [
+    "📚 *O/L SUBJECTS*",
     "",
-    "1️⃣ Mathematics",
-    "2️⃣ Science",
-    "3️⃣ English",
-    "4️⃣ Sinhala",
-    "5️⃣ History",
-    "6️⃣ Buddhism",
-    "7️⃣ Geography",
-    "8️⃣ Health",
-    "9️⃣ Art",
-    "🔟 Tamil",
-    "1️⃣1️⃣ Civic Education",
-    "1️⃣2️⃣ Business & Accounting Studies",
-    "1️⃣3️⃣ ICT",
-    "1️⃣4️⃣ Music",
-    "1️⃣5️⃣ Dancing",
-    "1️⃣6️⃣ Drama & Theatre",
-    "1️⃣7️⃣ French",
-    "1️⃣8️⃣ German",
-    "1️⃣9️⃣ Japanese",
-    "",
-    "Subject number එක reply කරන්න.",
-    "",
-    "🔙 menu - Main Menu"
-  ].join("\n"));
+    "Subject එක තෝරන්න:",
+    ""
+  ];
+
+  olSubjects.forEach((subject, index) => {
+    lines.push(`${index + 1}️⃣ ${subject}`);
+  });
+
+  lines.push("");
+  lines.push("0️⃣ Back");
+
+  return withFooter(lines.join("\n"));
 }
 
 // ================================
@@ -164,7 +195,9 @@ function olSubjectMenu() {
 // ================================
 
 function alSubjectMenu(stream) {
+
   const subjects = {
+
     Arts: [
       "Logic",
       "Sinhala",
@@ -203,7 +236,8 @@ function alSubjectMenu(stream) {
     ]
   };
 
-  const list = subjects[stream] || [];
+  const list =
+    subjects[stream] || [];
 
   const lines = [
     `📕 *A/L ${stream.toUpperCase()} SUBJECTS*`,
@@ -213,13 +247,17 @@ function alSubjectMenu(stream) {
   ];
 
   list.forEach((subject, index) => {
-    lines.push(`${index + 1}️⃣ ${subject}`);
+    lines.push(
+      `${index + 1}️⃣ ${subject}`
+    );
   });
 
   lines.push("");
   lines.push("0️⃣ Back");
 
-  return lines.join("\n");
+  return withFooter(
+    lines.join("\n")
+  );
 }
 
 // ================================
@@ -227,42 +265,36 @@ function alSubjectMenu(stream) {
 // ================================
 
 function yearMenu() {
-  return [
+
+  const years = [
+    2027, 2026, 2025, 2024,
+    2023, 2022, 2021, 2020,
+    2019, 2018, 2017, 2016,
+    2015, 2014, 2013, 2012,
+    2011, 2010, 2009, 2008,
+    2007, 2006, 2005, 2004,
+    2003, 2002, 2001, 2000
+  ];
+
+  const lines = [
     "📅 *YEAR SELECT*",
     "",
     "Year එක තෝරන්න:",
-    "",
-    "1️⃣ 2027",
-    "2️⃣ 2026",
-    "3️⃣ 2025",
-    "4️⃣ 2024",
-    "5️⃣ 2023",
-    "6️⃣ 2022",
-    "7️⃣ 2021",
-    "8️⃣ 2020",
-    "9️⃣ 2019",
-    "🔟 2018",
-    "11️⃣ 2017",
-    "12️⃣ 2016",
-    "13️⃣ 2015",
-    "14️⃣ 2014",
-    "15️⃣ 2013",
-    "16️⃣ 2012",
-    "17️⃣ 2011",
-    "18️⃣ 2010",
-    "19️⃣ 2009",
-    "20️⃣ 2008",
-    "21️⃣ 2007",
-    "22️⃣ 2006",
-    "23️⃣ 2005",
-    "24️⃣ 2004",
-    "25️⃣ 2003",
-    "26️⃣ 2002",
-    "27️⃣ 2001",
-    "28️⃣ 2000",
-    "",
-    "0️⃣ Back"
-  ].join("\n");
+    ""
+  ];
+
+  years.forEach((year, index) => {
+    lines.push(
+      `${index + 1}️⃣ ${year}`
+    );
+  });
+
+  lines.push("");
+  lines.push("0️⃣ Back");
+
+  return withFooter(
+    lines.join("\n")
+  );
 }
 
 // ================================
@@ -270,10 +302,11 @@ function yearMenu() {
 // ================================
 
 function helpMenu() {
-  return [
+  return withFooter([
     "ℹ️ *PASTPAPER PRO HELP*",
     "",
     "Paper එකක් ලබාගන්න:",
+    "",
     "1. `.menu` යවන්න",
     "2. O/L හෝ A/L තෝරන්න",
     "3. Medium එක තෝරන්න",
@@ -288,7 +321,7 @@ function helpMenu() {
     "→ 2025",
     "",
     "0️⃣ Back"
-  ].join("\n");
+  ].join("\n"));
 }
 
 // ================================
@@ -335,11 +368,6 @@ async function getPairingNumber() {
     );
   }
 
-  console.log(
-    "Using phone number:",
-    cleaned
-  );
-
   return cleaned;
 }
 
@@ -363,12 +391,13 @@ async function sendPaper(
   await sock.sendMessage(
     remoteJid,
     {
-      text:
+      text: withFooter(
         "🔎 *Paper එක හොයනවා...*\n\n" +
         `📚 ${state.exam}\n` +
         `📖 ${state.subject}\n` +
         `🌐 ${state.medium}\n` +
         `📅 ${state.year}`
+      )
     }
   );
 
@@ -387,10 +416,11 @@ async function sendPaper(
       await sock.sendMessage(
         remoteJid,
         {
-          text:
+          text: withFooter(
             "❌ *Paper එක හමු වුණේ නැහැ.*\n\n" +
             `Search: ${query}\n\n` +
             "වෙන year එකක් හෝ subject එකක් try කරන්න."
+          )
         }
       );
 
@@ -410,8 +440,10 @@ async function sendPaper(
           `${safeFileName(result.title)}.pdf`,
 
         caption:
-          `📄 ${result.title}\n\n` +
-          "📚 PastPaper Pro"
+          withFooter(
+            `📄 ${result.title}\n\n` +
+            "📚 PastPaper Pro"
+          )
       }
     );
 
@@ -430,9 +462,10 @@ async function sendPaper(
     await sock.sendMessage(
       remoteJid,
       {
-        text:
+        text: withFooter(
           "⚠️ Paper එක ලබාගන්න error එකක් ආවා.\n" +
           "ටිකකින් නැවත try කරන්න."
+        )
       }
     );
   }
@@ -517,9 +550,10 @@ async function handleMessage(
     await sock.sendMessage(
       remoteJid,
       {
-        text:
+        text: withFooter(
           "👋 PastPaper Pro වෙත සාදරයෙන් පිළිගන්නවා.\n\n" +
           "Menu එක open කරන්න `.menu` යවන්න."
+        )
       }
     );
 
@@ -539,9 +573,10 @@ async function handleMessage(
       await sock.sendMessage(
         remoteJid,
         {
-          text:
+          text: withFooter(
             "👋 Menu එකෙන් ඉවත් වුණා.\n\n" +
             "`.menu` යවලා නැවත ආරම්භ කරන්න."
+          )
         }
       );
 
@@ -553,22 +588,7 @@ async function handleMessage(
     }
 
     if (
-      state.step === "ol"
-    ) {
-
-      state.step = "main";
-
-      await sock.sendMessage(
-        remoteJid,
-        {
-          text: mainMenu()
-        }
-      );
-
-      return;
-    }
-
-    if (
+      state.step === "ol" ||
       state.step === "al_stream"
     ) {
 
@@ -740,13 +760,14 @@ async function handleMessage(
       await sock.sendMessage(
         remoteJid,
         {
-          text:
+          text: withFooter(
             "🔎 *Search Paper*\n\n" +
             "Search format එක:\n\n" +
             "`2025 O/L ICT Sinhala`\n" +
             "`2024 O/L Mathematics English`\n" +
             "`2023 A/L ICT Sinhala`\n\n" +
             "ඒ format එකෙන් message එක යවන්න."
+          )
         }
       );
 
@@ -986,35 +1007,16 @@ async function handleMessage(
     state.step === "ol_subject"
   ) {
 
-  const olSubjects = [
-  "Mathematics",
-  "Science",
-  "English",
-  "Sinhala",
-  "History",
-  "Buddhism",
-  "Geography",
-  "Health",
-  "Art",
-  "Tamil",
-  "Civic Education",
-  "Business & Accounting Studies",
-  "ICT",
-  "Music",
-  "Dancing",
-  "Drama & Theatre",
-  "French",
-  "German",
-  "Japanese"
-];
-    };
+    const index =
+      Number(input) - 1;
 
     if (
-      subjects[input]
+      Number.isInteger(index) &&
+      olSubjects[index]
     ) {
 
       state.subject =
-        subjects[input];
+        olSubjects[index];
 
       state.step =
         "year";
@@ -1051,6 +1053,7 @@ async function handleMessage(
   ) {
 
     const subjects = {
+
       Arts: [
         "Logic",
         "Sinhala",
@@ -1096,6 +1099,7 @@ async function handleMessage(
       Number(input) - 1;
 
     if (
+      Number.isInteger(index) &&
       list[index]
     ) {
 
@@ -1152,6 +1156,7 @@ async function handleMessage(
       Number(input) - 1;
 
     if (
+      Number.isInteger(index) &&
       years[index]
     ) {
 
@@ -1170,8 +1175,9 @@ async function handleMessage(
       await sock.sendMessage(
         remoteJid,
         {
-          text:
+          text: withFooter(
             "⬅️ වෙනත් paper එකක් ගන්න `.menu` යවන්න."
+          )
         }
       );
 
@@ -1201,8 +1207,9 @@ async function handleMessage(
     await sock.sendMessage(
       remoteJid,
       {
-        text:
+        text: withFooter(
           "`.menu` යවලා Main Menu එකට යන්න."
+        )
       }
     );
 
@@ -1220,26 +1227,26 @@ async function handleMessage(
     await sock.sendMessage(
       remoteJid,
       {
-        text:
+        text: withFooter(
           "🔎 Paper එක PastPaper Pro site එකෙන් හොයනවා..."
+        )
       }
     );
 
     try {
 
       const result =
-        await findPaperOnSite(
-          input
-        );
+        await findPaperOnSite(input);
 
       if (!result) {
 
         await sock.sendMessage(
           remoteJid,
           {
-            text:
+            text: withFooter(
               "❌ Matching paper එකක් හමු වුණේ නැහැ.\n\n" +
               "උදා: `2025 O/L ICT Sinhala`"
+            )
           }
         );
 
@@ -1259,7 +1266,10 @@ async function handleMessage(
             `${safeFileName(result.title)}.pdf`,
 
           caption:
-            `📄 ${result.title}\n\nPastPaper Pro`
+            withFooter(
+              `📄 ${result.title}\n\n` +
+              "PastPaper Pro"
+            )
         }
       );
 
@@ -1273,8 +1283,9 @@ async function handleMessage(
       await sock.sendMessage(
         remoteJid,
         {
-          text:
+          text: withFooter(
             "⚠️ Paper එක ලබාගන්න error එකක් ආවා."
+          )
         }
       );
     }
@@ -1285,8 +1296,9 @@ async function handleMessage(
   await sock.sendMessage(
     remoteJid,
     {
-      text:
+      text: withFooter(
         "`.menu` යවලා menu එක open කරන්න."
+      )
     }
   );
 }
@@ -1314,9 +1326,6 @@ function safeFileName(name) {
 // ================================
 // BOT CONNECTION
 // ================================
-
-// Important:
-// එක වෙලාවක එක socket එකක් විතරයි.
 
 let currentSocket = null;
 let reconnectTimer = null;
@@ -1426,23 +1435,6 @@ async function startBot() {
         );
 
         console.log("");
-        console.log(
-          "Phone එකේ:"
-        );
-
-        console.log(
-          "WhatsApp → Settings → Linked devices"
-        );
-
-        console.log(
-          "→ Link with phone number instead"
-        );
-
-        console.log(
-          "→ Code එක enter කරන්න."
-        );
-
-        console.log("");
 
       } catch (err) {
 
@@ -1464,10 +1456,6 @@ async function startBot() {
       connection,
       lastDisconnect
     }) => {
-
-      // ==============================
-      // CONNECTED
-      // ==============================
 
       if (
         connection === "open"
@@ -1496,16 +1484,9 @@ async function startBot() {
         console.log("");
       }
 
-      // ==============================
-      // CLOSED
-      // ==============================
-
       if (
         connection === "close"
       ) {
-
-        // Current socket එක මේ socket එක නම්
-        // විතරක් clear කරන්න.
 
         if (
           currentSocket === sock
@@ -1529,10 +1510,6 @@ async function startBot() {
           code
         );
 
-        // ============================
-        // LOGGED OUT
-        // ============================
-
         if (
           code ===
           DisconnectReason.loggedOut
@@ -1549,10 +1526,6 @@ async function startBot() {
           return;
         }
 
-        // ============================
-        // ALREADY RECONNECTING
-        // ============================
-
         if (
           reconnecting
         ) {
@@ -1563,10 +1536,6 @@ async function startBot() {
 
           return;
         }
-
-        // ============================
-        // RECONNECT
-        // ============================
 
         reconnecting =
           true;
@@ -1609,10 +1578,6 @@ async function startBot() {
 
                 reconnecting =
                   false;
-
-                console.log(
-                  "Retrying in 5 seconds..."
-                );
 
                 reconnectTimer =
                   setTimeout(
@@ -1699,14 +1664,13 @@ async function startBot() {
           await sock.sendMessage(
             remoteJid,
             {
-              text:
+              text: withFooter(
                 "⚠️ Bot එකේ error එකක් ආවා."
+              )
             }
           );
 
-        } catch (
-          sendError
-        ) {
+        } catch (sendError) {
 
           console.error(
             "Send error:",
