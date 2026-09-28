@@ -1,0 +1,16 @@
+{
+  "name": "pastpaper-pro-whatsapp-bot",
+  "version": "1.2.0",
+  "private": true,
+  "description": "PastPaper Pro WhatsApp PDF bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "install-browser": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.18",
+    "pino": "^9.3.2",
+    "playwright": "^1.55.0"
+  }
+}
